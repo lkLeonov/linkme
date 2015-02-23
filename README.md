@@ -1,0 +1,2 @@
+# linkme
+Simple app that gets web-sites of friends of a Vk.com user
