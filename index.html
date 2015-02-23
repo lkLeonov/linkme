@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+
+		<!--optimized for mobile-->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<title>Link me</title>
+		<meta name="description" content="Web-sites of friends of a Vk.com user" />
+		<meta name="keywords" content="VK API, sites" />
+		<meta name="author" content="Alexey Leonov" />
+		<link rel="shortcut icon" href="../favicon.ico"> 
+
+
+		<link rel="stylesheet" type="text/css" href="css/materialize.min.css"  media="screen,projection"/>
+		<link rel="stylesheet" type="text/css" href="css/global.css" />
+		<link rel="stylesheet" type="text/css" href="css/intro.css" />
+		<link rel="stylesheet" type="text/css" href="css/animate.css" />
+		
+
+	</head>
+	<body>
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="js/materialize.min.js"></script>
+		<script src="//vk.com/js/api/openapi.js"></script>
+		<script src="https://dl.dropboxusercontent.com/u/84430370/hashmine/js/vkInit.js"></script>
+		<script type="text/javascript" src="js/scrollReveal.js"></script>
+		<script>  </script>
+
+ 		<div class="splash" id="intro">
+ 			<div class="centered">
+ 				<h1>Link me</h1>
+ 				<a class="waves-effect waves-light btn-large" id="login-button">Enter</a>
+ 			</div>
+			<div class="credit">Designed by <a class="user" href="http://vk.com/lkleonov" target="blank_">Alexey Leonov</a></div>
+		</div>
+
+		
+		<nav>
+		  <div class="nav-wrapper">
+		    <a target="blank_" class="brand-logo">
+		    	<ul>
+					<li><div class="avatar"><img/></div></li>
+					<li><div class="username"></div></li>
+		  		</ul>
+		  	</a>
+		  </div>
+		  <a class="search-btn waves-effect waves-light btn-large"><i class="mdi-action-search"></i></a>
+		</nav>
+
+		<div id="main">
+			
+			<div class="splash" id="search">
+				<div class="centered">
+					<div class="container">
+						<div class="input-field col s4">
+							<input id="username" type="text" class="validate">
+							<label for="username">Paste user URL here:</label>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="users container" id="container"></div> 	
+		</div>
+
+ 
+		<div id='user-template'>
+		    <div class="usercard card-panel lighten-4" data-sr> <!-- pink or blue class -->
+		    	<div class="row valign-wrapper content">
+    	            <div class="col s2">
+    	              <img class="avatar circle responsive-img" /> <!-- notice the "circle" class -->
+    	            </div>
+    	            <div class="col s10 links">
+    	            	<h6><a class="username col s9 center-align" target="blank_"></a></h6>
+						<div class="col s9 center-align black-text link"></div>
+    	            </div>
+    	        </div>
+		    </div>
+		</div>
+
+		<div class="loading"></div>
+
+		<div id="error" class="modal">
+			<div class="modal-content">
+			  <h4>Error!</h4>
+			  <p>Wrong URL!</p>
+			</div>
+		</div>
+
+
+		<script>
+			var $El = {
+				intro: $('.splash#intro'),
+				main: $('#main'),
+				search: $('.splash#search'),
+				container: $('#container'),
+				searchInput: $('#username'),
+				errorModal: $('#error'),
+				loading: $('.loading'),
+				searchBtn: $('.search-btn'),
+				header: $('nav')
+			}
+
+			var newsearch = false;
+			// Helper Func
+			function openModal(msg) {
+				$El.errorModal.find('p').text(msg);
+				$El.errorModal.openModal();
+			}
+
+			function processLogin() {
+			//view
+				$El.intro.show();
+
+			}
+
+			function processLogined() {
+			//view
+				$El.intro.hide();
+				$El.main.show();
+
+			//logic
+
+
+			}
+			function containerIsFilled() {
+			//view
+				//console.log('Container is filled');
+				//$El.container.children().removeAttr('style').attr('data-sr', ''); // for plugin proper reinit
+
+				if (!window.sr) {
+					window.sr = new scrollReveal({
+						reset: true,
+						move: '50px',
+						mobile: true
+	    			});
+				} else sr.init();
+
+    			$El.loading.removeClass('show');
+    			$El.header.show();
+			}
+
+			function sites(data) {
+				if (!data.response) {
+					openModal('SITES FUNC: users.get error!');
+					$El.search.show();
+					return;
+				}
+			// view
+				$El.container.show();
+			// logic
+			  //> Regexp thing
+				var usersArr = data.response; // arr of objects
+				usersArr.forEach(function(user) {
+					if (!user.site) return;
+					// fil div with photo_50, name, lastname, site
+
+					var $card = $('#user-template').children().clone();
+					var $linkContainer = $card.find('.link');
+					if (user['sex'] == 1) $card.addClass('pink'); else $card.addClass('blue');
+					var linksArr = user['site'].split(' ');
+					linksArr.forEach(function(link){
+						if (/[,;]/.test(link)) {
+							link = link.substring(0, link.length - 1); // if a link ends with , or ; remove this char
+						}
+
+						if (!link) return; // if link is an empty string
+
+						if (!/^http/.test(link)) { //if link starts not with http / https
+							link = 'http://' + link; // add http to the link
+						}
+
+						$('<a/>').attr('href', link).attr('target', 'blank_').text(link).appendTo($linkContainer);
+					});
+			  //< Regexp thing
+					$card.find('.username').text(user['first_name'] + ' ' + user['last_name']).attr('href', 'http://vk.com/id' + user['uid']);
+					$card.find('.avatar').attr('src', user['photo_50']);
+					$card.attr('data-sr', '').appendTo($El.container);
+				});
+				containerIsFilled();
+
+			}
+
+			function friends(data) {
+				if (!data.response) {
+					openModal('FRIENDS FUNC: friends.get error!');
+					$El.search.show();
+					return;
+				}
+				$El.loading.addClass('show');
+
+				var userData = data.response;
+				VK.api('users.get', {user_ids: userData.toString(), fields: 'sex, photo_50, site, personal'}, sites); //personal is for site
+			}
+
+			function user(data) {
+				if (!data.response) {
+					openModal('User is not found!');
+					$El.search.show();
+					return;
+				}
+			// logic
+				var userObj = data.response[0];
+				$El.header.find('.username').text(userObj.first_name + ' ' + userObj.last_name);
+				$El.header.find('img').attr('src', userObj.photo_50);
+				$El.header.find('.brand-logo').attr('href', 'http://vk.com/id' + userObj.uid);
+
+				VK.api('friends.get', {user_id: userObj.uid}, friends);
+			}
+
+			$El.searchInput.keypress(function (e) {
+				if (e.keyCode == 13) {
+					if (newsearch) {
+						$El.container.empty().css('opacity', 'initial');
+					}
+					var userID = /vk\.com\/([\w\.]+)/.exec(this.value); // all w-chars and dot after vk.com
+
+					userID = userID ? userID[1] : null;
+					if (userID) {
+					// view
+						$El.search.hide();
+						
+					// logic
+						console.log('Getting data of user', userID);
+						VK.api('users.get', {user_ids: userID, fields: 'photo_50'}, user);
+					} else {
+						$('#error').openModal();
+						this.value = 'http://vk.com/';
+					}
+
+				}
+			});
+
+
+
+			$El.searchBtn.click(function() {
+				console.log('Search button click!');
+				newsearch = true; // search is not at first run anymore
+				$El.container.animate({
+					opacity: .1
+				});
+				$El.search.show();
+				$El.searchInput.focus();
+				$(this).addClass('disabled');
+				$El.searchBtn.unbind('click');
+			});
+
+
+			$El.searchInput.focusout(function() {
+				if (newsearch) {
+
+					console.log('FOCUSOUT! hiding search, returning container opacity, remove button disabled')
+					$El.search.hide();
+					$El.container.css('opacity', 'initial');
+					$El.searchBtn.removeClass('disabled');
+				}
+			});
+
+
+			vkInit(4680332, 'login-button', '', processLogin, processLogined);	
+		</script>
+	</body>
+</html>

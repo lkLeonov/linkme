@@ -1,0 +1,117 @@
+/***********************************
+*
+* Created by Alexey Leonov // 23.02.15
+*
+************************************/
+* { margin: 0; }
+
+#main {
+	display: none;
+}
+#user-template {
+	display: none;
+}
+
+.users.container {
+	
+}
+
+.usercard {
+	/*display: none;*/
+
+}
+
+[data-sr] { visibility: hidden; }
+
+/********************** > Materialize fixes ***********************/
+.usercard {
+	padding: .4em;
+	margin: .4em;
+}
+
+.usercard .content {
+	margin-bottom: 0;
+}
+
+.usercard .content .links {
+	word-wrap: break-word;
+}
+
+.usercard .content .username {
+	top: -8px;
+	position: relative;
+	color: grey;
+}
+
+
+
+.usercard.blue {
+	background-color: transparent !important;
+	border: 3px solid #BBDEFB;
+}
+.usercard.pink {
+	background-color: transparent !important;
+	border: 3px solid #f8bbd0;
+}
+
+#main a {
+	display: block;
+}
+
+#main a:hover {
+	text-decoration: underline;
+}
+
+/*a.btn-large {
+	text-decoration: none;
+}*/
+
+nav ul li:hover, nav ul li.active {
+	background-color: initial;
+}
+
+/********************** < Materialize fixes ***********************/
+
+.loading {
+	opacity: 0;
+	z-index: 1;
+	background: transparent url(../img/preloader.gif) no-repeat center center;
+	-webkit-transform: scale(0.5);
+	transform: scale(0.5);
+	-webkit-transition: opacity 0.5s, -webkit-transform 0.5s;
+	transition: opacity 0.5s, transform 0.5s;
+}
+
+.loading.show {
+	opacity: 1;
+	visibility: visible;
+	-webkit-transform: scale(1);
+	transform: scale(1);
+}
+
+.loading {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	pointer-events: none;
+}
+
+.search-btn {
+	position: fixed;
+	top: 0; right: 0;
+	margin: 4px;
+	background-color: rgba(237, 7, 7, 0.3) !important;
+}
+
+nav {
+	display: none;
+	padding-left: 1em;
+}
+
+
+
+nav .avatar {
+	margin: 5px 10px 5px 0px;
+}

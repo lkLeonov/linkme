@@ -1,0 +1,44 @@
+/**********************************
+Stylesheet created by Alexey Leonov
+05.02.15
+**********************************/
+@import url(http://fonts.googleapis.com/css?family=Libre+Baskerville);
+
+@keyframes fade-in {
+    from {opacity: 0.0;}
+    to {opacity: 1;}
+}
+@-webkit-keyframes fade-in {
+    from {opacity: 0.0;}
+    to {opacity: 1;}
+}
+
+.splash {
+	position: fixed;
+	text-align: center;
+	width: 100%;
+
+	animation: fade-in 1s;
+	-webkit-animation: fade-in 1s;
+	z-index: 10;
+	/*font-family: 'Libre Baskerville', serif;*/
+}
+.splash .centered {
+	position: absolute;
+	width: inherit;
+	top: 40vh;
+}
+
+.credit {
+	position: fixed;
+	bottom: 0;
+	text-align: center;
+	width: 100%;
+}
+.credit a {
+	text-decoration: underline;
+}
+
+.splash#intro {
+	display: none;
+}
