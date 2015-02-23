@@ -235,8 +235,7 @@
 
 
 
-			$El.searchBtn.click(function() {
-				console.log('Search button click!');
+			$(document.body).on('click', '.search-btn', function() {
 				newsearch = true; // search is not at first run anymore
 				$El.container.animate({
 					opacity: .1
@@ -250,8 +249,6 @@
 
 			$El.searchInput.focusout(function() {
 				if (newsearch) {
-
-					console.log('FOCUSOUT! hiding search, returning container opacity, remove button disabled')
 					$El.search.hide();
 					$El.container.css('opacity', 'initial');
 					$El.searchBtn.removeClass('disabled');
@@ -259,7 +256,7 @@
 			});
 
 
-			vkInit(4797778, 'login-button', '', processLogin, processLogined);	// lkleonov Link Me app
+			vkInit(4797778, 'login-button', '', processLogin, processLogined);	// lkleonov Link Me app 4797778
 		</script>
 	</body>
 </html>
